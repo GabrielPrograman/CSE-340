@@ -1,48 +1,40 @@
+
 import express from 'express';
-import { fileURLToPath } from 'url';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Define the application environment
-const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
+const app = express();
+const port = process.env.PORT || 3000;
 
-// Define the port number the server will listen on
-const PORT = process.env.PORT || 3000;
-
+// Configuración de __dirname para ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const app = express();
+// Configurar el motor de plantillas EJS y la carpeta views
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'src', 'views'));
 
-/**
- * Configure Express middleware
- */
-// Serve static files from the public directory
+// Middleware para archivos estáticos (CSS, imágenes)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set EJS as the templating engine
-app.set('view engine', 'ejs');
-// Tell Express where to find your templates
-app.set('views', path.join(__dirname, 'src/views'));
-
-/**
- * Routes
- */
+// Rutas usando funciones flecha y async/await
 app.get('/', async (req, res) => {
-    const title = 'Home';
-    res.render('home', { title });
+    res.render('home', { pageTitle: 'Welcome to the Community Service Portal' });
 });
 
 app.get('/organizations', async (req, res) => {
-    const title = 'Our Partner Organizations';
-    res.render('organizations', { title });
+    res.render('organizations', { pageTitle: 'Our Partner Organizations' });
 });
 
 app.get('/projects', async (req, res) => {
-    const title = 'Service Projects';
-    res.render('projects', { title });
+    res.render('projects', { pageTitle: 'Active Service Projects' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running at http://127.0.0.1:${PORT}`);
-  console.log(`Environment: ${NODE_ENV}`);
+app.get('/categories', async (req, res) => {
+    res.render('categories', { pageTitle: 'Service Project Categories' });
+});
+
+// Iniciar servidor
+app.listen(port, () => {
+    console.log(`Server running at http://127.0.0.1:${port}`);
 });

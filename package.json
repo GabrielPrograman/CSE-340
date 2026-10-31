@@ -19,6 +19,7 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "dotenv": "^18.0.9",
     "ejs": "^7.0.2",
     "express": "^5.2.0"
   },

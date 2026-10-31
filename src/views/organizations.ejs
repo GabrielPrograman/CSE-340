@@ -1,11 +1,14 @@
+
 <%- include('partials/header') %>
-<main>
-    <h1><%= title %></h1>
-    <p>Here are a few of our partner organizations:</p>
-    <ul>
-        <li><img src="/images/brightfuture-logo.png" alt="BrightFuture Builders logo"><strong>BrightFuture Builders</strong>: info@brightfuture.org</li>
-        <li><img src="/images/greenharvest-logo.png" alt="GreenHarvest Growers logo"><strong>GreenHarvest Growers</strong>: contact@greenharvest.org</li>
-        <li><img src="/images/unityserve-logo.png" alt="UnityServe Volunteers logo"><strong>UnityServe Volunteers</strong>: hello@unityserve.org</li>
-    </ul>
-</main>
+
+<section class="page-section">
+    <h2 class="section-title"><%= pageTitle %></h2>
+    <p class="section-intro">Discover the institutions working daily to drive social transformation.</p>
+    
+    <div class="organizations-gallery">
+        <img src="/images/brightfuture-logo.png" alt="Partner Logo" class="org-img">
+        <img src="/images/greenharvest-logo.png" alt="Partner Logo" class="org-img">
+    </div>
+</section>
+
 <%- include('partials/footer') %>
