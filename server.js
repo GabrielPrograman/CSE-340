@@ -27,24 +27,36 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/organizations', async (req, res) => {
-    const organizations = await getAllOrganizations();
-    const pageTitle = 'Our Partner Organizations';
-
-    res.render('organizations', { pageTitle, organizations });
+    try {
+        const organizations = await getAllOrganizations();
+        const pageTitle = 'Our Partner Organizations';
+        res.render('organizations', { pageTitle, organizations });
+    } catch (error) {
+        console.error('Error loading organizations:', error);
+        res.status(500).send('Internal Server Error: Unable to load organizations.');
+    }
 });
 
 app.get('/projects', async (req, res) => {
-    const projects = await getAllProjects();
-    const pageTitle = 'Active Service Projects';
-
-    res.render('projects', { pageTitle, projects });
+    try {
+        const projects = await getAllProjects();
+        const pageTitle = 'Active Service Projects';
+        res.render('projects', { pageTitle, projects });
+    } catch (error) {
+        console.error('Error loading projects:', error);
+        res.status(500).send('Internal Server Error: Unable to load projects.');
+    }
 });
 
 app.get('/categories', async (req, res) => {
-    const categories = await getAllCategories();
-    const pageTitle = 'Service Project Categories';
-
-    res.render('categories', { pageTitle, categories });
+    try {
+        const categories = await getAllCategories();
+        const pageTitle = 'Service Project Categories';
+        res.render('categories', { pageTitle, categories });
+    } catch (error) {
+        console.error('Error loading categories:', error);
+        res.status(500).send('Internal Server Error: Unable to load categories.');
+    }
 });
 
 app.listen(port, async () => {
