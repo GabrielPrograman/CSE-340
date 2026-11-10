@@ -3,7 +3,9 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
-import { testConnection, pool } from './src/models/db.js';
+import pkg from 'pg';
+const { Pool } = pkg;
+import { testConnection } from './src/models/db.js';
 import { getAllOrganizations } from './src/models/organizations.js';
 import { getAllProjects } from './src/models/projects.js';
 import { getAllCategories } from './src/models/categories.js';
@@ -11,17 +13,13 @@ import { getAllCategories } from './src/models/categories.js';
 const app = express();
 const port = process.env.PORT || 3000;
 
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src', 'views'));
 
-
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 app.get('/', async (req, res) => {
     res.render('home', { pageTitle: 'Welcome to the Community Service Portal' });
@@ -39,7 +37,15 @@ app.get('/setup-db', async (req, res) => {
         }
 
         const sql = fs.readFileSync(sqlPath, 'utf8');
-        await pool.query(sql);
+        
+        const tempPool = new Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: { rejectUnauthorized: false }
+        });
+
+        await tempPool.query(sql);
+        await tempPool.end();
+
         res.send('Database tables created and initialized successfully!');
     } catch (err) {
         console.error('Error executing setup script:', err);
