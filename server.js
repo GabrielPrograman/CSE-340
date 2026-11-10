@@ -3,7 +3,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
-import { testConnection } from './src/models/db.js';
+import { testConnection, pool } from './src/models/db.js';
 import { getAllOrganizations } from './src/models/organizations.js';
 import { getAllProjects } from './src/models/projects.js';
 import { getAllCategories } from './src/models/categories.js';
@@ -30,7 +30,6 @@ app.get('/', async (req, res) => {
 // TEMPORARY ROUTE TO INITIALIZE DATABASE TABLES ON RENDER
 app.get('/setup-db', async (req, res) => {
     try {
-        // Try multiple possible locations for setup.sql
         let sqlPath = path.join(__dirname, 'setup.sql');
         if (!fs.existsSync(sqlPath)) {
             sqlPath = path.join(__dirname, 'database', 'setup.sql');
