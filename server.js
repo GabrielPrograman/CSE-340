@@ -27,6 +27,7 @@ app.get('/', async (req, res) => {
 
 // TEMPORARY ROUTE TO INITIALIZE DATABASE TABLES ON RENDER
 app.get('/setup-db', async (req, res) => {
+    let tempPool;
     try {
         let sqlPath = path.join(__dirname, 'setup.sql');
         if (!fs.existsSync(sqlPath)) {
@@ -36,9 +37,13 @@ app.get('/setup-db', async (req, res) => {
             sqlPath = path.join(__dirname, 'src', 'setup.sql');
         }
 
+        if (!fs.existsSync(sqlPath)) {
+            return res.status(404).send('Error: setup.sql file could not be found on the server.');
+        }
+
         const sql = fs.readFileSync(sqlPath, 'utf8');
         
-        const tempPool = new Pool({
+        tempPool = new Pool({
             connectionString: process.env.DATABASE_URL,
             ssl: { rejectUnauthorized: false }
         });
@@ -48,8 +53,11 @@ app.get('/setup-db', async (req, res) => {
 
         res.send('Database tables created and initialized successfully!');
     } catch (err) {
+        if (tempPool) {
+            try { await tempPool.end(); } catch (e) {}
+        }
         console.error('Error executing setup script:', err);
-        res.status(500).send('Error executing script: ' + err.message);
+        res.status(500).send(`<pre style="color:red; font-size:15px; font-family:monospace;">Error executing script:\n\n${err.stack || err.message}</pre>`);
     }
 });
 
