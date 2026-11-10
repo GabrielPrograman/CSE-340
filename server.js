@@ -12,6 +12,7 @@ import { getAllCategories } from './src/models/categories.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,7 +22,7 @@ app.set('views', path.join(__dirname, 'src', 'views'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+// Middleware to log all incoming requests
 app.use((req, res, next) => {
     if (NODE_ENV === 'development') {
         console.log(`${req.method} ${req.url}`);
@@ -29,7 +30,7 @@ app.use((req, res, next) => {
     next();
 });
 
-
+// Middleware to make NODE_ENV available to all templates
 app.use((req, res, next) => {
     res.locals.NODE_ENV = NODE_ENV;
     next();
@@ -112,7 +113,7 @@ app.listen(port, async () => {
     try {
         await testConnection();
         console.log(`Server running at http://127.0.0.1:${port}`);
-        console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+        console.log(`Environment: ${NODE_ENV}`);
     } catch (error) {
         console.error('Error connecting to the database:', error);
     }
