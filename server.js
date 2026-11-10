@@ -26,6 +26,19 @@ app.get('/', async (req, res) => {
     res.render('home', { pageTitle: 'Welcome to the Community Service Portal' });
 });
 
+// TEMPORARY ROUTE TO INITIALIZE DATABASE TABLES ON RENDER
+app.get('/setup-db', async (req, res) => {
+    try {
+        const sqlPath = path.join(__dirname, 'setup.sql');
+        const sql = fs.readFileSync(sqlPath, 'utf8');
+        await pool.query(sql);
+        res.send('Database tables created and initialized successfully!');
+    } catch (err) {
+        console.error('Error executing setup script:', err);
+        res.status(500).send('Error executing script: ' + err.message);
+    }
+});
+
 app.get('/organizations', async (req, res) => {
     try {
         const organizations = await getAllOrganizations();
