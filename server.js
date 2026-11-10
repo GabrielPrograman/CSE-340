@@ -30,7 +30,15 @@ app.get('/', async (req, res) => {
 // TEMPORARY ROUTE TO INITIALIZE DATABASE TABLES ON RENDER
 app.get('/setup-db', async (req, res) => {
     try {
-        const sqlPath = path.join(__dirname, 'setup.sql');
+        // Try multiple possible locations for setup.sql
+        let sqlPath = path.join(__dirname, 'setup.sql');
+        if (!fs.existsSync(sqlPath)) {
+            sqlPath = path.join(__dirname, 'database', 'setup.sql');
+        }
+        if (!fs.existsSync(sqlPath)) {
+            sqlPath = path.join(__dirname, 'src', 'setup.sql');
+        }
+
         const sql = fs.readFileSync(sqlPath, 'utf8');
         await pool.query(sql);
         res.send('Database tables created and initialized successfully!');
