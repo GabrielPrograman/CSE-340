@@ -1,6 +1,6 @@
 const showHomePage = async (req, res) => {
-    const title = 'Home';
-    res.render('home', { title });
+    const pageTitle = 'Welcome to the Community Service Portal';
+    res.render('home', { pageTitle });
 };
 
 export { showHomePage };
