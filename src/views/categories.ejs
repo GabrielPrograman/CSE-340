@@ -2,19 +2,19 @@
 
 <section class="page-section">
     <h2 class="section-title"><%= pageTitle %></h2>
-    <p class="section-intro">Explore our diverse sectors of community engagement and select a branch to support.</p>
+    <p class="section-intro">Browse service opportunities by category.</p>
     
-    <div class="categories-grid">
+    <ul class="categories-list" style="margin-left: 1.5rem; line-height: 1.8; color: #1f2937;">
         <% if (categories && categories.length > 0) { %>
             <% categories.forEach(category => { %>
-                <div class="category-card">
-                    <h3><%= category.name %></h3>
-                </div>
+                <li>
+                    <a href="/category/<%= category.category_id %>"><%= category.name %></a>
+                </li>
             <% }) %>
         <% } else { %>
             <p>No categories found.</p>
         <% } %>
-    </div>
+    </ul>
 </section>
 
 <%- include('partials/footer') %>
