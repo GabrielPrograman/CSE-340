@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+
+<section class="page-section">
+    <h2 class="section-title"><%= organizationDetails.name %></h2>
+
+    <% if (organizationDetails.logo_filename) { %>
+        <div style="margin-bottom: 1.5rem;">
+            <img src="/images/<%= organizationDetails.logo_filename %>" alt="<%= organizationDetails.name %> Logo" class="org-img" style="max-width: 200px; height: auto;">
+        </div>
+    <% } %>
+
+    <p class="section-intro"><%= organizationDetails.description %></p>
+
+    <ul style="margin-left: 1.5rem; line-height: 1.8; color: #1f2937;">
+        <li><strong>Contact:</strong> <%= organizationDetails.contact_email %></li>
+    </ul>
+
+    <% if (projects && projects.length > 0) { %>
+        <h3 style="margin-top: 1.5rem;">Projects</h3>
+        <ul class="projects-list" style="margin-left: 1.5rem; line-height: 1.8; color: #1f2937;">
+            <% projects.forEach(project => { %>
+                <li>
+                    <a href="/project/<%= project.project_id %>"><strong><%= project.title %></strong></a>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p style="margin-top: 1.5rem;">No projects associated with this organization.</p>
+    <% } %>
+
+    <p style="margin-top: 1.5rem;">
+        <a href="/organizations">&larr; Back to Organizations</a>
+    </p>
+</section>
+
+<%- include('partials/footer') %>

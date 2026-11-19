@@ -9,11 +9,16 @@
             <% organizations.forEach(org => { %>
                 <div class="org-card" style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                     <% if (org.logo_filename) { %>
-                        <img src="/images/<%= org.logo_filename %>" alt="<%= org.name %> Logo" class="org-img" style="max-width: 150px; height: auto; margin-bottom: 1rem;">
+                        <a href="/organization/<%= org.organization_id %>">
+                            <img src="/images/<%= org.logo_filename %>" alt="<%= org.name %> Logo" class="org-img" style="max-width: 150px; height: auto; margin-bottom: 1rem;">
+                        </a>
                     <% } %>
-                    <h3><%= org.name %></h3>
+                    <h3><a href="/organization/<%= org.organization_id %>"><%= org.name %></a></h3>
                     <p><%= org.description %></p>
                     <p><small>Contact: <%= org.contact_email %></small></p>
+                    <p style="margin-top: 0.75rem;">
+                        <a href="/organization/<%= org.organization_id %>">View Details &rarr;</a>
+                    </p>
                 </div>
             <% }) %>
         <% } else { %>
