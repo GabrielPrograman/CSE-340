@@ -37,17 +37,28 @@ const showOrganizationDetailsPage = async (req, res, next) => {
     }
 };
 
-const showNewOrganizationForm = async (req, res) => {
-    const title = 'Add New Organization';
-    res.render('new-organization', { title });
+const showNewOrganizationForm = async (req, res, next) => {
+    try {
+        const pageTitle = 'Add New Organization';
+        res.render('new-organization', {
+            title: pageTitle,
+            pageTitle
+        });
+    } catch (error) {
+        next(error);
+    }
 };
 
-const processNewOrganizationForm = async (req, res) => {
-    const { name, description, contactEmail } = req.body;
-    const logoFilename = 'placeholder-logo.png'; // Use the placeholder logo for all new organizations
+const processNewOrganizationForm = async (req, res, next) => {
+    try {
+        const { name, description, contactEmail } = req.body;
+        const logoFilename = 'placeholder-logo.png'; // Use the placeholder logo for all new organizations
 
-    const organizationId = await createOrganization(name, description, contactEmail, logoFilename);
-    res.redirect(`/organization/${organizationId}`);
+        const organizationId = await createOrganization(name, description, contactEmail, logoFilename);
+        res.redirect(`/organization/${organizationId}`);
+    } catch (error) {
+        next(error);
+    }
 };
 
 export {
