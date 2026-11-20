@@ -15,6 +15,10 @@
         <li><strong>Contact:</strong> <%= organizationDetails.contact_email %></li>
     </ul>
 
+    <p style="margin-top: 1rem;">
+        <a href="/edit-organization/<%= organizationDetails.organization_id %>">Edit Organization</a>
+    </p>
+
     <% if (projects && projects.length > 0) { %>
         <h3 style="margin-top: 1.5rem;">Projects</h3>
         <ul class="projects-list" style="margin-left: 1.5rem; line-height: 1.8; color: #1f2937;">

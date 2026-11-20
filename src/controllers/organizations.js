@@ -1,5 +1,10 @@
 import { body, validationResult } from 'express-validator';
-import { getAllOrganizations, getOrganizationDetails, createOrganization } from '../models/organizations.js';
+import {
+    getAllOrganizations,
+    getOrganizationDetails,
+    createOrganization,
+    updateOrganization
+} from '../models/organizations.js';
 import { getProjectsByOrganizationId } from '../models/projects.js';
 
 // Define validation and sanitization rules for organization form
@@ -100,10 +105,62 @@ const processNewOrganizationForm = async (req, res, next) => {
     }
 };
 
+const showEditOrganizationForm = async (req, res, next) => {
+    try {
+        const organizationId = req.params.id;
+        const organizationDetails = await getOrganizationDetails(organizationId);
+
+        if (!organizationDetails) {
+            return res.status(404).render('errors/404', {
+                title: 'Organization Not Found',
+                pageTitle: 'Organization Not Found'
+            });
+        }
+
+        const pageTitle = 'Edit Organization';
+        res.render('edit-organization', {
+            title: pageTitle,
+            pageTitle,
+            organizationDetails
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const processEditOrganizationForm = async (req, res, next) => {
+    try {
+        const organizationId = req.params.id;
+
+        // Check for validation errors
+        const results = validationResult(req);
+        if (!results.isEmpty()) {
+            results.array().forEach((error) => {
+                req.flash('error', error.msg);
+            });
+
+            return res.redirect(`/edit-organization/${organizationId}`);
+        }
+
+        const { name, description, contactEmail, logoFilename } = req.body;
+
+        await updateOrganization(organizationId, name, description, contactEmail, logoFilename);
+
+        // Set a success flash message
+        req.flash('success', 'Organization updated successfully!');
+
+        res.redirect(`/organization/${organizationId}`);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export {
     showOrganizationsPage,
     showOrganizationDetailsPage,
     showNewOrganizationForm,
     processNewOrganizationForm,
+    showEditOrganizationForm,
+    processEditOrganizationForm,
     organizationValidation
 };
