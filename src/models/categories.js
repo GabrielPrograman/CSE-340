@@ -56,6 +56,47 @@ const getProjectsByCategoryId = async (categoryId) => {
     return result.rows;
 };
 
+// Create a new category
+const createCategory = async (name) => {
+    const query = `
+        INSERT INTO public.category (name)
+        VALUES ($1)
+        RETURNING category_id;
+    `;
+    const result = await db.query(query, [name]);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to create category');
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('Created new category with ID:', result.rows[0].category_id);
+    }
+
+    return result.rows[0].category_id;
+};
+
+// Update an existing category
+const updateCategory = async (categoryId, name) => {
+    const query = `
+        UPDATE public.category
+        SET name = $1
+        WHERE category_id = $2
+        RETURNING category_id;
+    `;
+    const result = await db.query(query, [name, categoryId]);
+
+    if (result.rows.length === 0) {
+        throw new Error(`Category with ID ${categoryId} not found or could not be updated`);
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === 'true') {
+        console.log('Updated category with ID:', result.rows[0].category_id);
+    }
+
+    return result.rows[0].category_id;
+};
+
 // Assign a category to a project in the many-to-many table
 const assignCategoryToProject = async (categoryId, projectId) => {
     const query = `
@@ -84,5 +125,7 @@ export {
     getCategoryById,
     getCategoriesByProjectId,
     getProjectsByCategoryId,
+    createCategory,
+    updateCategory,
     updateCategoryAssignments
 };
